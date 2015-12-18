@@ -380,6 +380,8 @@ float ElementStyle::ResolveProperty(const Property* property, float base_value)
 			return inch * (1.0f / 72.0f);
 		if (property->unit & Property::PC) // pica
 			return inch * (1.0f / 6.0f);
+		if (property->unit & Property::PIX) // device independent pixel
+			return inch * (1.0f / 96.0f);
 	}
 
 	// We're not a numeric property; return 0.
@@ -468,6 +470,8 @@ float ElementStyle::ResolveProperty(const String& name, float base_value)
 			return inch / 72.0f;
 		if (property->unit & Property::PC) // pica
 			return inch / 6.0f;
+		if (property->unit & Property::PIX) // Platform independent pixel
+			return inch / 96.0f;
 	}
 
 	// We're not a numeric property; return 0.

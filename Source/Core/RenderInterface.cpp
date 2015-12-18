@@ -107,7 +107,7 @@ float RenderInterface::GetVerticalTexelOffset()
 // Returns the number of pixels per inch.
 float RenderInterface::GetPixelsPerInch()
 {
-	return 100;
+	return 96.0f;
 }
 
 // Called when this render interface is released.

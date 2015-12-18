@@ -135,6 +135,8 @@ float Decorator::ResolveProperty(const PropertyDictionary& properties, const Str
 			return inch / 72.0f;
 		if (property->unit & Property::PC) // pica
 			return inch / 6.0f;
+		if (property->unit & Property::PIX) // device independent pixel
+			return inch / 96.0f;
 	}
 
 	ROCKET_ERROR;
