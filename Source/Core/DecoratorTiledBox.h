@@ -47,8 +47,9 @@ public:
 	/// @param[in] tiles The declaration for all eight tiles.
 	/// @param[in] texture_names The application-specific path to the texture for the eight tiles.
 	/// @param[in] rcss_paths The paths to the RCSS files that defined the texture sources.
+	/// @param[in] dpi_scale Whether the border should be scaled according to dpi
 	/// @return True if all the images loaded (or are pending loading) and are of compatible sizes, false otherwise.
-	bool Initialise(const Tile* tiles, const String* texture_names, const String* rcss_paths);
+	bool Initialise(const Tile* tiles, const String* texture_names, const String* rcss_paths, bool dpi_scale);
 
 	/// Called on a decorator to generate any required per-element data for a newly decorated element.
 	virtual DecoratorDataHandle GenerateElementData(Element* element);
@@ -73,6 +74,9 @@ private:
 	};
 
 	Tile tiles[9];
+	bool dpi_border_scale;
+	// Converts Device Independent pixels to physical pixels
+	float DipToPx(float pix, float dpi);
 };
 
 }

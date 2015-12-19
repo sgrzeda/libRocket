@@ -70,8 +70,14 @@ Decorator* DecoratorTiledBoxInstancer::InstanceDecorator(const String& ROCKET_UN
 	GetTileProperties(tiles[7], texture_names[7], rcss_paths[7], properties, "bottom-image");
 	GetTileProperties(tiles[8], texture_names[8], rcss_paths[8], properties, "center-image");
 
+	bool scale_border_dpi = false;
+	const Property *dpi_border_property = properties.GetProperty("dpi-border-scale");
+	if (dpi_border_property)
+	{
+		scale_border_dpi = dpi_border_property->Get< bool >();
+	}
 	DecoratorTiledBox* decorator = new DecoratorTiledBox();
-	if (decorator->Initialise(tiles, texture_names, rcss_paths))
+	if (decorator->Initialise(tiles, texture_names, rcss_paths, scale_border_dpi))
 		return decorator;
 
 	decorator->RemoveReference();

@@ -60,7 +60,7 @@ DecoratorTiledBox::~DecoratorTiledBox()
 }
 
 // Initialises the tiles for the decorator.
-bool DecoratorTiledBox::Initialise(const Tile* _tiles, const String* _texture_names, const String* _rcss_paths)
+bool DecoratorTiledBox::Initialise(const Tile* _tiles, const String* _texture_names, const String* _rcss_paths, bool _dpi_scale)
 {
 	// Load the textures.
 	for (int i = 0; i < 9; i++)
@@ -106,6 +106,8 @@ bool DecoratorTiledBox::Initialise(const Tile* _tiles, const String* _texture_na
 	if (tiles[CENTRE].texture_index < 0)
 		return false;
 
+	dpi_scale = _dpi_scale;
+
 	return true;
 }
 
@@ -134,6 +136,29 @@ DecoratorDataHandle DecoratorTiledBox::GenerateElementData(Element* element)
 	// The size of the left and right tiles.
 	Vector2f left_dimensions = tiles[LEFT_EDGE].GetDimensions(element);
 	Vector2f right_dimensions = tiles[RIGHT_EDGE].GetDimensions(element);
+
+	// Scale the border dimensions
+	if (dpi_border_scale)
+	{
+		float dpi = element->GetRenderInterface()->GetPixelsPerInch();
+
+		top_left_dimensions.x = DipToPx(top_left_dimensions.x, dpi);
+		top_left_dimensions.y = DipToPx(top_left_dimensions.y, dpi);
+
+		top_right_dimensions.y = DipToPx(top_right_dimensions.y, dpi);
+		top_right_dimensions.x = DipToPx(top_right_dimensions.x, dpi);
+
+		top_dimensions.y = DipToPx(top_dimensions.y, dpi);
+
+		left_dimensions.x = DipToPx(left_dimensions.x, dpi);
+		right_dimensions.x = DipToPx(right_dimensions.x, dpi);
+
+		bottom_left_dimensions.y = DipToPx(bottom_left_dimensions.y, dpi);
+		bottom_left_dimensions.x = DipToPx(bottom_left_dimensions.x, dpi);
+		bottom_dimensions.y = DipToPx(bottom_dimensions.y, dpi);
+		bottom_right_dimensions.x = DipToPx(bottom_right_dimensions.x, dpi);
+		bottom_right_dimensions.y = DipToPx(bottom_right_dimensions.y, dpi);
+	}
 
 	// Scale the top corners down if appropriate. If they are scaled, then the left and right edges are also scaled
 	// if they shared a width with their corner. Best solution? Don't know.
@@ -194,7 +219,6 @@ DecoratorDataHandle DecoratorTiledBox::GenerateElementData(Element* element)
 		if (tiles[BOTTOM_RIGHT_CORNER].GetDimensions(element).y == tiles[BOTTOM_EDGE].GetDimensions(element).y)
 			bottom_dimensions.y = bottom_right_dimensions.y;
 	}
-
 	DecoratorTiledBoxData* data = new DecoratorTiledBoxData(element);
 
 	// Generate the geometry for the top-left tile.
@@ -295,6 +319,11 @@ void DecoratorTiledBox::RenderElement(Element* element, DecoratorDataHandle elem
 
 	for (int i = 0; i < 9; i++)
 		data->geometry[i]->Render(translation);
+}
+
+float DecoratorTiledBox::DipToPx(float pix, float dpi)
+{
+	return (pix * dpi) / 96.0f;
 }
 
 }
